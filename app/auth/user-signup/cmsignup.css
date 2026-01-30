@@ -1,0 +1,92 @@
+.signup_full_page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  font-family: 'Inter', sans-serif;
+}
+
+.signup_form_card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+/* Hover Effect - The 'Hawa' Effect */
+.signup_form_card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.brand_logo_center {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 900;
+  color: #000;
+  margin-bottom: 30px;
+  letter-spacing: -1.5px;
+}
+
+.brand_logo_center span { color: #ffcc00; }
+
+.point_container { display: flex; justify-content: center; margin-bottom: 8px; }
+.welcome_point_text { font-size: 11px; font-weight: 800; color: #aaa; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #ffcc00; padding-bottom: 2px;}
+
+.input_group_block { margin-bottom: 15px; text-align: left; }
+.label_text { display: block; font-size: 13px; font-weight: 700; color: #444; margin-bottom: 6px; }
+
+.standard_input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #f0f0f0;
+  border-radius: 14px;
+  font-size: 15px;
+  transition: 0.3s ease;
+  box-sizing: border-box;
+}
+
+.standard_input:focus {
+  border-color: #ffcc00;
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.15);
+}
+
+.btn_finish_reg {
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.btn_finish_reg:hover:not(:disabled) {
+  background-color: #222;
+  transform: scale(1.02);
+}
+
+.btn_finish_reg:disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.welcome_user_msg { font-size: 24px; font-weight: 800; color: #000; margin-bottom: 5px; }
+
+.fade_in { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
