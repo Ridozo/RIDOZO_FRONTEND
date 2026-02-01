@@ -1,11 +1,11 @@
 import Image from "next/image";
-import Header from "@/component/Header/Header";
 import RiderDashboard from "./rider-dashboard/page";
+import Navbar from "../component/Navbar/Navbar";
 
 export default function Home() {
   return (
     <div>
-      <Header />
+      <Navbar />
       <RiderDashboard />
     </div>
   );
