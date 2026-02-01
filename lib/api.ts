@@ -1,14 +1,13 @@
 import axios from "axios";
-import { store } from "../redux/store";
-import { setTokens, logout } from "../redux/globalSlice";
-import { Toast } from "./toastService";
+import { store } from "@/redux/store";
+import { setTokens, logout } from "@/redux/globalSlice";
 
-// Read environment variables from Vite
-const API_URL = import.meta.env.VITE_API_URL;
-const IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
-if (!API_URL) throw new Error("VITE_API_URL is not defined in .env");
-if (!IMAGE_URL) throw new Error("VITE_IMAGE_URL is not defined in .env");
+const API_URL = process.env.NEXT_PUBLIC_API_URL!;
+const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL!;
+
+if (!API_URL) throw new Error("NEXT_PUBLIC_API_URL is not defined");
+if (!IMAGE_URL) throw new Error("NEXT_PUBLIC_IMAGE_URL is not defined");
 
 // Create Axios instance
 export const api = axios.create({
@@ -16,55 +15,61 @@ export const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-//  Request Interceptor — add Authorization header automatically
+// Request Interceptor
 api.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem("access_token");
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    if (typeof window !== "undefined") {
+      const accessToken = localStorage.getItem("access_token");
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor — handle token refresh logic
+// Response Interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-  if(error.response?.status === 403)
-  {
-      Toast.error("You are not authorized to access this");
-  }
+    if (error.response?.status === 403) {
+     console.log("You are not authorized to access this");
+    }
 
-    // If token expired and we haven’t retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
+        if (typeof window === "undefined") throw error;
+
         const refreshToken = localStorage.getItem("refresh_token");
-        if (!refreshToken) throw new Error("No refresh token found");
+        if (!refreshToken) throw new Error("No refresh token");
 
-        // Request new tokens
-        const refreshResponse = await axios.post(`${API_URL}/auth/refresh-token`, {
-          refreshToken,
-        });
+        const refreshResponse = await axios.post(
+          `${API_URL}/auth/refresh-token`,
+          { refreshToken }
+        );
 
-        const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data;
+        const { accessToken, refreshToken: newRefreshToken } =
+          refreshResponse.data;
 
-        // Save new tokens in Redux + localStorage
-        store.dispatch(setTokens({ accessToken, refreshToken: newRefreshToken }));
+        store.dispatch(
+          setTokens({ accessToken, refreshToken: newRefreshToken })
+        );
 
-        // Update header and retry original request
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
+      } catch (err) {
         store.dispatch(logout());
-        window.location.href = "/"; // Redirect to login
-        return Promise.reject(refreshError);
+
+        if (typeof window !== "undefined") {
+          window.location.replace("/");
+        }
+
+        return Promise.reject(err);
       }
     }
 
@@ -72,5 +77,5 @@ api.interceptors.response.use(
   }
 );
 
-// Utility to get full image URL
+// Utility
 export const getImageUrl = (path: string) => `${IMAGE_URL}/${path}`;
