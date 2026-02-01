@@ -1,0 +1,157 @@
+.navbar_container {
+  width: 100%;
+  height: 80px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
+  border-bottom: 2px solid #ffcc00;
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.logo_section {
+  font-size: 26px;
+  font-weight: 900;
+  color: #000;
+  letter-spacing: -1px;
+}
+
+.gold_text { color: #d4af37; }
+
+.nav_links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav_item {
+  text-decoration: none;
+  color: #333;
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+
+.nav_item:hover { color: #d4af37; }
+
+/* Hamburger Menu Icon */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: #000;
+  transition: 0.4s;
+  border-radius: 5px;
+}
+
+/* Auth Actions */
+.nav_actions {
+  display: flex;
+  align-items: center;
+}
+
+.login_btn {
+  background: #000;
+  color: #ffcc00;
+  padding: 10px 25px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.profile_wrapper { position: relative; }
+
+.profile_img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #ffcc00;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+/* Profile Dropdown */
+.profile_dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 220px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border: 1px solid #eee;
+  padding: 15px 0;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown_header { padding: 0 20px 10px; }
+.dropdown_header strong { display: block; font-size: 15px; }
+.dropdown_header small { font-size: 11px; color: #888; }
+
+.divider { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
+
+.dropdown_link {
+  display: block;
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.dropdown_link:hover { background: #fff9e6; color: #d4af37; }
+
+.logout_btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: #ff3b3b;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* --- RESPONSIVE LOGIC (MOBILE) --- */
+@media (max-width: 850px) {
+  .hamburger { display: flex; order: 1; }
+  .logo_section { order: 2; position: absolute; left: 50%; transform: translateX(-50%); }
+  .nav_actions { order: 3; }
+
+  .nav_links {
+    position: fixed;
+    top: 80px;
+    left: -100%; /* छुपा हुआ */
+    flex-direction: column;
+    background: #ffffff;
+    width: 100%;
+    padding: 30px;
+    gap: 25px;
+    transition: 0.4s ease-in-out;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-bottom: 3px solid #ffcc00;
+  }
+
+  .nav_active { left: 0; } /* क्लिक करने पर दिखेगा */
+
+  /* Hamburger to X Animation */
+  .ham_active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .ham_active span:nth-child(2) { opacity: 0; }
+  .ham_active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+}
