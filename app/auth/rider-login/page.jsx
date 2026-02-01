@@ -15,7 +15,8 @@ export default function RiderLogin() {
  * Otherwise, alerts the user with a success message
  * @returns {void}
  */
-/*******  7e3fc964-2fce-40bd-b3f2-9ea156a760d6  *******/  const handleSendOtp = () => {
+/*******  7e3fc964-2fce-40bd-b3f2-9ea156a760d6  *******/  
+const handleSendOtp = () => {
     if (!identifier) return alert("Please enter mobile number");
     // यहाँ ओटीपी भेजने का लॉजिक आएगा
     setIsOtpSent(true);
