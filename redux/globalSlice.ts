@@ -1,4 +1,3 @@
-// src/redux/globalSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -9,11 +8,12 @@ interface GlobalState {
   refreshToken: string | null;
 }
 
+// 1. Initial State को खाली रखो क्योंकि Redux Persist इसे खुद भर देगा
 const initialState: GlobalState = {
   menus: [],
-  user: JSON.parse(localStorage.getItem("user") || "null"),
-  accessToken: localStorage.getItem("access_token"),
-  refreshToken: localStorage.getItem("refresh_token"),
+  user: null,
+  accessToken: null,
+  refreshToken: null,
 };
 
 const globalSlice = createSlice({
@@ -26,10 +26,13 @@ const globalSlice = createSlice({
 
     setUser(state, action: PayloadAction<any | null>) {
       state.user = action.payload;
-      if (action.payload) {
-        localStorage.setItem("user", JSON.stringify(action.payload));
-      } else {
-        localStorage.removeItem("user");
+      // 2. LocalStorage अपडेट करने से पहले window चेक करना ज़रूरी है
+      if (typeof window !== "undefined") {
+        if (action.payload) {
+          localStorage.setItem("user", JSON.stringify(action.payload));
+        } else {
+          localStorage.removeItem("user");
+        }
       }
     },
 
@@ -40,15 +43,20 @@ const globalSlice = createSlice({
       const { accessToken, refreshToken } = action.payload;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
-      localStorage.setItem("access_token", accessToken);
-      localStorage.setItem("refresh_token", refreshToken);
+      
+      if (typeof window !== "undefined") {
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refreshToken);
+      }
     },
 
     clearTokens(state) {
       state.accessToken = null;
       state.refreshToken = null;
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+      }
     },
 
     logout(state) {
@@ -57,13 +65,14 @@ const globalSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
 
-      localStorage.removeItem("user");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("user");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+      }
     },
   },
 });
 
-export const { setMenus, setUser, setTokens, clearTokens, logout } =
-  globalSlice.actions;
+export const { setMenus, setUser, setTokens, clearTokens, logout } = globalSlice.actions;
 export default globalSlice.reducer;

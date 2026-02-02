@@ -1,97 +1,192 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks'; 
+import { toggleStatus, updateProfile } from '../../redux/riderSlice'; 
+import { clearRequest } from '../../redux/rideRequestSlice';
+import { acceptRide, updateStatus, finishRide } from '../../redux/activeRideSlice';
 import styles from './RiderDashboard.module.css';
 
-const RiderDashboard: React.FC = () => {
-  const [isOnline, setIsOnline] = useState<boolean>(true);
-  const [showDetails, setShowDetails] = useState<boolean>(false); // डिटेल्स दिखाने के लिए
+const RiderDashboard = () => {
+  const dispatch = useAppDispatch();
+  const [activeTab, setActiveTab] = useState('home');
+  const [showEditPopup, setShowEditPopup] = useState(false);
+
+  // Redux States
+  const { isOnline, walletBalance, profile } = useAppSelector((state) => state.rider);
+  const { incomingRequest } = useAppSelector((state) => state.riderRequest);
+  const { isActive, rideData, status: tripStatus } = useAppSelector((state) => state.activeRide);
+
+  // Local States for Profile Inputs
+  const [tempName, setTempName] = useState(profile?.name);
+  const [tempVehicle, setTempVehicle] = useState(profile?.vehicle);
+
+  // Sync temp state with redux when popup opens
+  useEffect(() => {
+    if (showEditPopup) {
+      setTempName(profile?.name);
+      setTempVehicle(profile?.vehicle);
+    }
+  }, [showEditPopup, profile]);
 
   return (
-    <div className={styles.main_wrapper}>
-      {/* 1. TOP HEADER */}
-      <header className={styles.header}>
-        <div className={styles.status_pill}>
-          <div className={isOnline ? styles.dot_online : styles.dot_offline}></div>
-          <span className={styles.status_text}>YOU ARE {isOnline ? 'ONLINE' : 'OFFLINE'}</span>
-          <button className={styles.toggle_btn} onClick={() => setIsOnline(!isOnline)}>
-            {isOnline ? 'GO OFFLINE' : 'GO ONLINE'}
-          </button>
+    <div className={styles.container}>
+      
+      {/* 1. TOP HEADER (Fixed Across Tabs) */}
+      <header className={styles.top_ui}>
+        <div className={styles.glass_header}>
+          <div className={styles.profile_min} onClick={() => setActiveTab('account')}>
+            <div className={styles.avatar_circle}>{profile?.name.charAt(0)}</div>
+            <div className={styles.header_txt}>
+              <strong>{profile?.name}</strong>
+              <p>WALLET: <span>₹{walletBalance}</span></p>
+            </div>
+          </div>
+          <div className={styles.status_box}>
+            <span className={isOnline ? styles.txt_green : styles.txt_red}>
+              {isOnline ? "ONLINE" : "OFFLINE"}
+            </span>
+            <label className={styles.switch}>
+              <input 
+                type="checkbox" 
+                checked={isOnline} 
+                onChange={() => dispatch(toggleStatus())} 
+              />
+              <span className={styles.slider}></span>
+            </label>
+          </div>
         </div>
       </header>
 
-      {/* 2. MAP AREA */}
-      <div className={styles.map_section}>
-        <div className={styles.map_mock}></div>
-      </div>
-
-      {/* 3. BOTTOM PANEL */}
-      <div className={styles.bottom_panel}>
-        <div className={styles.drag_handle}></div>
-        <div className={styles.stats_grid}>
-          <div className={styles.stat_box}>
-            <small>Today</small>
-            <h2 className={styles.gold_text}>₹1,540</h2>
+      {/* 2. MAIN SCROLLABLE CONTENT */}
+      <main className={styles.main_content}>
+        
+        {/* TAB: HOME (Map & Active Trip) */}
+        {activeTab === 'home' && (
+          <div className={styles.map_view}>
+            {isActive ? (
+              <div className={styles.trip_overlay_card}>
+                <span className={styles.trip_badge}>TRIP IN PROGRESS</span>
+                <h2>{tripStatus === 'PICKUP' ? 'PICKUP CLIENT' : 'DROP OFF'}</h2>
+                <div className={styles.trip_location}>
+                  <strong>{tripStatus === 'PICKUP' ? rideData?.pickup : rideData?.drop}</strong>
+                </div>
+                <button 
+                  className={styles.action_btn_black}
+                  onClick={() => tripStatus === 'PICKUP' ? dispatch(updateStatus('DROPOFF')) : dispatch(finishRide())}
+                >
+                  {tripStatus === 'PICKUP' ? 'ARRIVED AT PICKUP' : 'COMPLETE TRIP'}
+                </button>
+              </div>
+            ) : (
+              <div className={styles.searching_area}>
+                <div className={isOnline ? styles.pulse_green : styles.pulse_red}></div>
+                <p>{isOnline ? "SEARCHING FOR NEARBY RIDES..." : "SYSTEM IS CURRENTLY OFFLINE"}</p>
+              </div>
+            )}
           </div>
-          <div className={styles.stat_box}>
-            <small>Rides</small>
-            <h2>14</h2>
+        )}
+
+        {/* TAB: WALLET */}
+        {activeTab === 'wallet' && (
+          <div className={styles.tab_padding}>
+            <h1 className={styles.page_title}>WALLET</h1>
+            <div className={styles.earnings_card}>
+              <small>TOTAL EARNINGS</small>
+              <h1 className={styles.gold_val}>₹{walletBalance}</h1>
+              <button className={styles.small_btn_gold}>CASH OUT</button>
+            </div>
           </div>
-          <div className={styles.stat_box}>
-            <small>Rating</small>
-            <h2>4.9 ★</h2>
+        )}
+
+        {/* TAB: PROFILE (Updated UI) */}
+        {activeTab === 'account' && (
+          <div className={styles.tab_padding}>
+            <h1 className={styles.page_title}>PROFILE</h1>
+            <div className={styles.user_main_card}>
+              <div className={styles.big_avatar}>{profile?.name.charAt(0)}</div>
+              <h3>{profile?.name}</h3>
+              <p>{profile?.rating} ⭐ Rider Rating</p>
+            </div>
+            <div className={styles.details_list}>
+              <div className={styles.detail_item}>
+                <small>VEHICLE INFO</small>
+                <strong>{profile?.vehicle}</strong>
+              </div>
+              <div className={styles.detail_item}>
+                <small>CONTACT</small>
+                <strong>{profile?.phone}</strong>
+              </div>
+              <button className={styles.edit_text_btn} onClick={() => setShowEditPopup(true)}>
+                EDIT PROFILE INFO
+              </button>
+            </div>
+            <button className={styles.logout_outline}>LOGOUT SYSTEM</button>
           </div>
-        </div>
+        )}
+      </main>
 
-        <div className={styles.action_container}>
-          <button className={styles.main_action_btn} onClick={() => setShowDetails(true)}>
-            VIEW DETAILED REPORT <span>→</span>
-          </button>
-        </div>
-      </div>
+      {/* 3. MODALS & POPUPS (Redux Linked) */}
 
-      {/* 4. VIEW DETAILS MODAL (यह रहा वो डेटा जो गायब था) */}
-      {showDetails && (
-        <div className={styles.details_overlay}>
-          <div className={styles.details_modal}>
-            <div className={styles.modal_header}>
-              <h3>Earnings Overview</h3>
-              <button className={styles.close_btn} onClick={() => setShowDetails(false)}>×</button>
+      {/* RIDE REQUEST POPUP */}
+      {isOnline && incomingRequest && !isActive && (
+        <div className={styles.modal_backdrop}>
+          <div className={styles.request_modal}>
+            <span className={styles.new_req_tag}>NEW RIDE FOUND</span>
+            <h1 className={styles.fare_display}>₹{incomingRequest.fare}</h1>
+            <div className={styles.route_info_box}>
+              <p><strong>FROM:</strong> {incomingRequest.pickup}</p>
+              <p><strong>TO:</strong> {incomingRequest.drop}</p>
             </div>
-            
-           
-            
-            <div className={styles.earnings_list}>
-               <div className={styles.total_earnings}>
-              <p>Total Balance</p>
-              <h4 className={styles.gold_text}>₹2065.00</h4>
-              <button className={styles.withdraw_btn} onClick={() => setShowDetails(false)}>Withdraw</button>
-            </div>
-              <div className={styles.earning_card}>
-                <p>Weekly Earnings</p>
-                <h4 className={styles.gold_text}>₹8,450.00</h4>
-                <small>26 Jan - 01 Feb</small>
-              </div>
-              <div className={styles.earning_card}>
-                <p>Monthly Earnings</p>
-                <h4>₹32,120.00</h4>
-                <small>January 2026</small>
-              </div>
-            </div>
-
-            <div className={styles.history_section}>
-              <p className={styles.section_title}>Recent Activity</p>
-              <div className={styles.activity_item}>
-                <span>31 Jan - 12:40 PM</span>
-                <strong>+ ₹120.00</strong>
-              </div>
-              <div className={styles.activity_item}>
-                <span>31 Jan - 11:15 AM</span>
-                <strong>+ ₹95.00</strong>
-              </div>
+            <div className={styles.modal_actions}>
+              <button className={styles.btn_grey} onClick={() => dispatch(clearRequest())}>IGNORE</button>
+              <button className={styles.btn_gold} onClick={() => {
+                dispatch(acceptRide(incomingRequest));
+                dispatch(clearRequest());
+                setActiveTab('home');
+              }}>ACCEPT RIDE</button>
             </div>
           </div>
         </div>
       )}
+
+      {/* EDIT PROFILE POPUP */}
+      {showEditPopup && (
+        <div className={styles.modal_backdrop}>
+          <div className={styles.edit_modal}>
+            <h2 className={styles.modal_header}>EDIT PROFILE</h2>
+            <div className={styles.input_stack}>
+              <div className={styles.input_field}>
+                <label>Rider Name</label>
+                <input type="text" value={tempName} onChange={(e) => setTempName(e.target.value)} />
+              </div>
+              <div className={styles.input_field}>
+                <label>Vehicle Number</label>
+                <input type="text" value={tempVehicle} onChange={(e) => setTempVehicle(e.target.value)} />
+              </div>
+            </div>
+            <div className={styles.modal_actions}>
+              <button className={styles.btn_grey} onClick={() => setShowEditPopup(false)}>CANCEL</button>
+              <button className={styles.btn_black} onClick={() => {
+                dispatch(updateProfile({ name: tempName, vehicle: tempVehicle }));
+                setShowEditPopup(false);
+              }}>SAVE CHANGES</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. BOTTOM NAVIGATION */}
+      <nav className={styles.bottom_navbar}>
+        {['home', 'wallet', 'history', 'account'].map((item) => (
+          <div 
+            key={item} 
+            className={activeTab === item ? styles.nav_item_active : styles.nav_item}
+            onClick={() => setActiveTab(item)}
+          >
+            {item.toUpperCase()}
+          </div>
+        ))}
+      </nav>
     </div>
   );
 };
