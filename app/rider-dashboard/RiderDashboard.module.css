@@ -1,269 +1,69 @@
-/* 1. मुख्य कंटेनर (Main Wrapper) */
-.main_wrapper {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background: #f4f4f4;
-  overflow: hidden;
-  font-family: 'Inter', -apple-system, sans-serif;
+/* ALL VARIABLES DEFINED ONCE */
+:root {
+  --white: #ffffff;
+  --soft-grey: #f4f7f6;
+  --dark: #000000;
+  --gold: #ffcc00;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --border-color: #f1f3f5;
+  --text-grey: #adb5bd;
 }
 
-/* 2. हेडर और ऑनलाइन/ऑफलाइन टॉगल (Top Header) */
-.header {
-  position: absolute;
-  top: 25px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 100;
-  padding: 0 20px;
+.container { position: relative; height: 100vh; width: 100%; background: var(--white); overflow: hidden; font-family: 'Inter', sans-serif; }
+
+/* HEADER SYSTEM */
+.top_ui { position: absolute; top: 15px; width: 100%; padding: 0 15px; z-index: 900; }
+.glass_header { 
+  background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 10px 15px; 
+  border-radius: 50px; border: 1px solid var(--border-color); display: flex; 
+  justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
+.profile_min { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.avatar_circle { width: 35px; height: 35px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; }
+.header_txt strong { font-size: 11px; display: block; text-transform: uppercase; }
+.header_txt p { font-size: 9px; color: var(--text-grey); margin: 0; }
+.status_box { display: flex; align-items: center; gap: 8px; background: #f8f9fa; padding: 5px 12px; border-radius: 30px; }
 
-.status_pill {
-  background: #000000;
-  padding: 10px 10px 10px 22px;
-  border-radius: 60px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-  border: 1px solid rgba(255, 204, 0, 0.3);
-}
+/* TOGGLE SWITCH */
+.switch { position: relative; width: 42px; height: 21px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--red); border-radius: 34px; transition: .4s; cursor: pointer; }
+.slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 2px; bottom: 2px; background: #fff; border-radius: 50%; transition: .4s; }
+input:checked + .slider { background: var(--green); }
+input:checked + .slider:before { transform: translateX(21px); }
 
-.status_text { 
-  color: #ffffff; 
-  font-size: 11px; 
-  font-weight: 900; 
-  letter-spacing: 1.5px; 
-  text-transform: uppercase;
-}
+/* MAIN CONTENT */
+.main_content { height: 100%; width: 100%; padding-bottom: 90px; }
+.map_view { height: 100%; background: var(--soft-grey); display: flex; align-items: center; justify-content: center; position: relative; }
+.tab_padding { padding: 90px 20px 20px; }
+.page_title { font-size: 24px; font-weight: 900; margin-bottom: 25px; border-left: 5px solid var(--dark); padding-left: 15px; }
 
-.dot_online { 
-  width: 12px; height: 12px; background: #00ff00; 
-  border-radius: 50%; box-shadow: 0 0 12px #00ff00; 
-}
+/* PROFILE SECTION */
+.user_main_card { background: var(--soft-grey); padding: 30px; border-radius: 25px; text-align: center; border: 1px solid var(--border-color); }
+.big_avatar { width: 80px; height: 80px; background: var(--gold); margin: 0 auto 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; border: 4px solid #fff; }
+.details_list { background: #fff; border: 1px solid var(--border-color); border-radius: 20px; margin-top: 20px; overflow: hidden; }
+.detail_item { padding: 15px 20px; border-bottom: 1px solid var(--border-color); text-align: left; }
+.detail_item small { font-size: 9px; color: var(--text-grey); display: block; font-weight: 800; }
+.edit_text_btn { width: 100%; padding: 12px; background: var(--soft-grey); border: none; font-weight: 800; font-size: 10px; cursor: pointer; }
+.logout_outline { width: 100%; margin-top: 20px; padding: 15px; border-radius: 15px; background: transparent; border: 1.5px solid var(--red); color: var(--red); font-weight: 800; }
 
-.dot_offline { 
-  width: 12px; height: 12px; background: #ff3b3b; 
-  border-radius: 50%; box-shadow: 0 0 10px #ff3b3b;
-}
+/* MODALS */
+.modal_backdrop { position: absolute; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.request_modal, .edit_modal { background: #fff; width: 100%; padding: 30px; border-radius: 30px; text-align: center; }
+.fare_display { font-size: 45px; font-weight: 900; color: var(--green); margin: 15px 0; }
+.input_stack { text-align: left; margin-bottom: 25px; }
+.input_field label { font-size: 10px; font-weight: 800; color: var(--text-grey); margin-bottom: 5px; display: block; }
+.input_field input { width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: 10px; margin-bottom: 15px; font-weight: 600; }
+.modal_actions { display: flex; gap: 10px; }
 
-.toggle_btn {
-  background: #ffcc00;
-  color: #000;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 50px;
-  font-weight: 900;
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
-}
+/* BUTTONS */
+.btn_black { flex: 1; background: #000; color: var(--gold); border: none; padding: 15px; border-radius: 12px; font-weight: 900; }
+.btn_gold { flex: 1; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: 900; }
+.btn_grey { flex: 1; background: #f1f3f5; border: none; padding: 15px; border-radius: 12px; color: #888; font-weight: 700; }
+.action_btn_black { width: 100%; background: #000; color: var(--gold); padding: 18px; border: none; border-radius: 15px; font-weight: 900; margin-top: 15px; }
 
-.toggle_btn:hover {
-  background: #ffffff;
-  transform: scale(1.05);
-}
-
-/* 3. मैप एरिया (Map Section) */
-.map_section { 
-  height: 75%; 
-  width: 100%; 
-  background: #e5e5e5; 
-  position: relative;
-}
-
-.map_mock { 
-  height: 100%; 
-  width: 100%; 
-  display: flex; 
-  flex-direction: column;
-  justify-content: center; 
-  align-items: center; 
-  background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)), url('https://user-images.githubusercontent.com/17789435/51860611-30491000-2321-11e9-9133-c1578b874744.png');
-  background-size: cover;
-}
-
-/* 4. बॉटम पैनल (Bottom White Panel) */
-.bottom_panel {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: #ffffff;
-  border-radius: 35px 35px 0 0;
-  padding: 30px 40px 40px;
-  box-shadow: 0 -20px 45px rgba(0,0,0,0.12);
-  z-index: 200;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.drag_handle {
-  width: 50px; height: 6px; background: #e0e0e0;
-  border-radius: 10px; margin: -15px auto 25px;
-}
-
-/* 5. स्टैट्स ग्रिड (Earnings, Rides, Rating) */
-.stats_grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.stat_box { 
-  text-align: center; 
-  padding: 10px;
-}
-
-.stat_box small { 
-  color: #999; 
-  font-size: 10px; 
-  font-weight: 800; 
-  text-transform: uppercase; 
-  letter-spacing: 0.8px;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.stat_box h2 { 
-  margin: 0; 
-  font-size: 26px; 
-  font-weight: 900; 
-  color: #000; 
-}
-
-.gold_text { 
-  color: #d4af37 !important; 
-}
-
-/* 6. एक्शन बटन (View Report Button) */
-.action_container {
-  display: flex;
-  justify-content: center;
-}
-
-.main_action_btn {
-  background: #000000;
-  color: #ffcc00;
-  border: none;
-  padding: 18px 50px;
-  border-radius: 18px;
-  font-weight: 900;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.main_action_btn:hover {
-  background: #333;
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-}
-
-.main_action_btn span {
-  font-size: 18px;
-}
-
-/* 7. रिस्पॉन्सिवनेस (Mobile Tweaks) */
-@media (max-width: 600px) {
-  .bottom_panel { 
-    padding: 25px 20px 35px; 
-  }
-  
-  .stats_grid { 
-    gap: 10px; 
-  }
-  
-  .stat_box h2 { 
-    font-size: 20px; 
-  }
-
-  .stat_box small {
-    font-size: 9px;
-  }
-
-  .main_action_btn { 
-    width: 100%; /* मोबाइल पर फुल विड्थ */
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .status_pill {
-    width: 90%;
-    justify-content: space-between;
-  }
-}
-
-/* --- DETAILS OVERLAY & MODAL --- */
-.details_overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex; align-items: flex-end; /* मोबाइल पर नीचे से आएगा */
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-}
-
-.details_modal {
-  background: #fff;
-  width: 100%;
-  max-width: 500px;
-  border-radius: 30px 30px 0 0;
-  padding: 30px;
-  animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.modal_header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 25px;
-}
-
-.modal_header h3 { font-weight: 900; font-size: 20px; margin: 0; }
-
-.close_btn {
-  background: #eee; border: none; width: 35px; height: 35px;
-  border-radius: 50%; font-size: 20px; cursor: pointer;
-  border: 1px solid #000;
-}
-
-.earnings_list {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-  margin-bottom: 30px;
-}
-
-.earning_card {
-  background: #f9f9f9; padding: 20px; border-radius: 20px;
-  border: 1px solid #eee;
-}
-
-.earning_card p { margin: 0; font-size: 11px; font-weight: 800; color: #888; text-transform: uppercase; }
-.earning_card h4 { margin: 10px 0 5px; font-size: 18px; font-weight: 900; }
-.earning_card small { font-size: 10px; color: #aaa; }
-
-.history_section { border-top: 1px solid #eee; pt: 20px; }
-.section_title { font-weight: 900; font-size: 14px; margin-bottom: 15px; color: #000; }
-
-.activity_item {
-  display: flex; justify-content: space-between;
-  padding: 12px 0; border-bottom: 1px solid #f5f5f5;
-  font-size: 13px;
-}
-
-.activity_item strong { color: #00c853; }
-
-/* मोबाइल के लिए */
-@media (max-width: 480px) {
-  .earnings_list { grid-template-columns: 1fr; } /* मोबाइल पर एक के नीचे एक */
-  .details_modal { padding: 20px; }
-}
+/* NAVBAR */
+.bottom_navbar { position: absolute; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 15px 0 35px; border-top: 1px solid var(--border-color); z-index: 900; }
+.nav_item { font-size: 10px; font-weight: 700; color: var(--text-grey); cursor: pointer; }
+.nav_item_active { color: var(--dark); font-weight: 900; border-bottom: 2px solid var(--dark); }
