@@ -3,30 +3,33 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
 
-// आपके स्लाइसेस
+// आपके स्लाइसेस (इम्पोर्ट्स एकदम सही हैं)
 import riderReducer from "./riderSlice";
 import globalReducer from "./globalSlice";
 import rideRequestReducer from "./rideRequestSlice";
 import activeRideReducer from "./activeRideSlice";
+import rideHistoryReducer from "./rideHistorySlice"; // आपकी नई स्लाइस
 
-// 1. सभी रिड्यूसर्स को एक साथ जोड़ें (यही गलती थी)
+// 1. सभी रिड्यूसर्स को एक साथ जोड़ें
 const rootReducer = combineReducers({
   global: globalReducer,
-  rider: riderReducer, // अब 'rider' भी स्टोर का हिस्सा है
+  rider: riderReducer,
   riderRequest: rideRequestReducer,
-  activeRide: activeRideReducer
+  activeRide: activeRideReducer,
+  rideHistory: rideHistoryReducer, // यहाँ ऐड हो गया
 });
 
 // 2. Persist कॉन्फ़िगरेशन
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["global", "rider", "riderRequest", "activeRide"], // अगर आप चाहते हैं कि ऑनलाइन स्टेटस रिफ्रेश करने पर भी न हटे
+  // 'rideHistory' को भी whitelist में डाल दिया है ताकि हिस्ट्री डिलीट न हो रिफ्रेश पर
+  whitelist: ["global", "rider", "riderRequest", "activeRide", "rideHistory"], 
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// 3. सिर्फ एक स्टोर बनाएँ (Final Store)
+// 3. Final Store
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -46,6 +49,6 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-// Types (इनका इस्तेमाल hooks.ts में करें)
+// Types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

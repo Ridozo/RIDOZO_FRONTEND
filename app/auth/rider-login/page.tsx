@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '../../../redux/hooks';
-import { setLogin } from '../../../redux/riderSlice';
+// import { setLogin } from '../../../redux/riderSlice';
 import styles from './rider-login.module.css';
 
 const LoginPage = () => {
