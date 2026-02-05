@@ -1,62 +1,75 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// 1. Data Structure (Types)
-interface Profile {
-  name: string;
-  vehicle: string;
-  phone: string;
-  rating: number;
+interface WithdrawalRecord {
+  id: string;
+  amount: number;
+  date: string;
 }
 
 interface RiderState {
-  isLoggedIn: boolean;
   isOnline: boolean;
-  walletBalance: string;
-  profile: Profile;
+  walletBalance: number;
+  withdrawals: WithdrawalRecord[]; 
+  profile: {
+    name: string;
+    vehicle: string;
+    rating: number;
+    phone: string;
+  };
 }
 
-// 2. Initial Data (तुम्हारा बताया हुआ डिफ़ॉल्ट डेटा)
 const initialState: RiderState = {
-  isLoggedIn: false,
+  walletBalance: 0,
+  withdrawals: [], 
   isOnline: false,
-  walletBalance: "500.00",
-  profile: {
-    name: "JAT RIDER",
-    vehicle: "HR 26 BK 9922",
-    phone: "+91 98765 43210",
-    rating: 4.9
+  profile: {  
+    name: "",
+    vehicle: "",
+    rating: 5.0,
+    phone: ""
   }
 };
 
-// 3. Slice Logic
 const riderSlice = createSlice({
   name: 'rider',
   initialState,
   reducers: {
-    // लॉगिन के समय डेटा सेट करने के लिए
-    setLogin: (state, action: PayloadAction<Partial<Profile>>) => {
-      state.isLoggedIn = true;
-      state.profile = { ...state.profile, ...action.payload };
+    // यही वो फंक्शन है जो गायब था ✅
+    setLogin: (state, action: PayloadAction<{phone: string, name: string, vehicle: string}>) => {
+      state.isOnline = true;
+      state.profile = {
+        ...state.profile,
+        name: action.payload.name,
+        vehicle: action.payload.vehicle,
+        phone: action.payload.phone,
+      };
     },
-    // ऑनलाइन/ऑफलाइन टॉगल
+
     toggleStatus: (state) => {
       state.isOnline = !state.isOnline;
     },
-    // प्रोफाइल एडिट करने के लिए
-    updateProfile: (state, action: PayloadAction<Partial<Profile>>) => {
-      state.profile = { ...state.profile, ...action.payload };
+
+    addMoney: (state, action: PayloadAction<number>) => {
+      state.walletBalance += action.payload;
     },
-    // वॉलेट बैलेंस अपडेट (राइड पूरी होने पर)
-    updateBalance: (state, action: PayloadAction<string>) => {
-      state.walletBalance = action.payload;
+
+    withdrawBalance: (state) => {
+      if (state.walletBalance > 0) {
+        state.withdrawals.unshift({
+          id: `WTH_${Date.now()}`,
+          amount: state.walletBalance,
+          date: new Date().toLocaleString('en-GB')
+        });
+        state.walletBalance = 0;
+      }
     },
-    // लॉगआउट के लिए
+
     logout: (state) => {
-      state.isLoggedIn = false;
-      state.isOnline = false;
+      return initialState; // सब कुछ रिसेट कर देगा
     }
-  },
+  }
 });
 
-export const { setLogin, toggleStatus, updateProfile, updateBalance, logout } = riderSlice.actions;
+// यहाँ चेक करें: setLogin एक्सपोर्ट होना ज़रूरी है ✅
+export const { setLogin, toggleStatus, addMoney, withdrawBalance, logout } = riderSlice.actions;
 export default riderSlice.reducer;
