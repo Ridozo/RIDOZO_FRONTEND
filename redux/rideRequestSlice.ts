@@ -1,41 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface RideData {
+// एक चैनल बनाओ जो दोनों टैब्स के बीच बात करेगा
+const rideChannel = typeof window !== "undefined" ? new BroadcastChannel('ride_requests') : null;
+
+interface RideRequest {
   id: string;
   pickup: string;
   drop: string;
-  fare: string;
-  distance: string;
-  customerName: string;
+  fare: number;
+  userName: string;
 }
 
-interface RideRequestState {
-  incomingRequest: RideData | null; // नई रिक्वेस्ट का डेटा यहाँ रहेगा
-  isSearching: boolean;            // क्या हम राइड ढूंढ रहे हैं?
-}
-
-const initialState: RideRequestState = {
+const initialState: { incomingRequest: RideRequest | null } = {
   incomingRequest: null,
-  isSearching: false,
 };
 
 const rideRequestSlice = createSlice({
-  name: 'rideRequest', // स्लाइस का नाम बदल दिया
+  name: 'rideRequest',
   initialState,
   reducers: {
-    // जब सर्वर से नई रिक्वेस्ट आए
-    setIncomingRequest: (state, action: PayloadAction<RideData | null>) => {
+    sendRideRequest: (state, action: PayloadAction<RideRequest>) => {
+      state.incomingRequest = action.payload;
+      // ✅ दूसरे टैब (Rider) को डेटा भेजो
+      rideChannel?.postMessage(action.payload);
+    },
+    // यह नया रिड्यूसर है जो दूसरे टैब से डेटा रिसीव करेगा ✅
+    receiveRideRequest: (state, action: PayloadAction<RideRequest>) => {
       state.incomingRequest = action.payload;
     },
-    // रिक्वेस्ट को साफ़ करने के लिए (Accept/Reject के बाद)
     clearRequest: (state) => {
       state.incomingRequest = null;
-    },
-    setSearchingStatus: (state, action: PayloadAction<boolean>) => {
-      state.isSearching = action.payload;
+      rideChannel?.postMessage(null); // दूसरे टैब को बोलो कि रिक्वेस्ट हट गई
     }
-  },
+  }
 });
 
-export const { setIncomingRequest, clearRequest, setSearchingStatus } = rideRequestSlice.actions;
+export const { sendRideRequest, receiveRideRequest, clearRequest } = rideRequestSlice.actions;
 export default rideRequestSlice.reducer;

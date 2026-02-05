@@ -18,8 +18,8 @@
 
 .logo_icon {
   width: 65px; height: 65px;
-  background: #ffcc00; /* Gold Accent */
-  color: #000;
+  background: #2ecc71; /* Green Accent ✅ */
+  color: #fff;
   border-radius: 18px;
   display: flex; 
   align-items: center; 
@@ -27,35 +27,35 @@
   font-size: 30px; 
   font-weight: 900;
   margin: 0 auto 15px;
-  box-shadow: 0 8px 15px rgba(255, 204, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(46, 204, 113, 0.2);
 }
+
 .brand_name {
   font-size: 24px;
   font-weight: 900;
   letter-spacing: -0.5px;
+  color: #1a1a1a;
 }
 
-.brand_name span { color: #ffcc00; }
-
-/* --- FAST PROGRESS BAR --- */
-
+.brand_name span { color: #2ecc71; }
 
 .title { 
-  font-size: 15px; 
+  font-size: 14px; 
   font-weight: 800; 
-  letter-spacing: -0.5px; 
-  color: #000;
-  padding: 10px 0;
-  margin-top: 10px;
-  border: 1 solid #000;
-  background-color: #ffcc00;
-  border-radius: 12px;
+  letter-spacing: 0.5px; 
+  color: #fff;
+  padding: 12px 0;
+  margin-top: 15px;
+  text-transform: uppercase;
+  background-color: #2ecc71; /* Green Background ✅ */
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.15);
 }
 
 .subtitle { 
-  color: #adb5bd; 
+  color: #95a5a6; 
   font-size: 14px; 
-  margin-top: 5px; 
+  margin-top: 8px; 
 }
 
 .input_group { 
@@ -67,50 +67,64 @@
   display: block; 
   font-size: 11px; 
   font-weight: 800;
-  color: #adb5bd; 
+  color: #7f8c8d; 
   margin-bottom: 8px; 
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .input_group input {
   width: 100%; 
-  padding: 16px; 
-  border-radius: 12px;
-  border: 1.5px solid #f1f3f5; 
+  padding: 18px; 
+  border-radius: 14px;
+  border: 2px solid #f1f3f5; 
   background: #f8f9fa;
   font-size: 16px; 
   font-weight: 600; 
+  color: #1a1a1a;
   outline: none;
+  transition: all 0.2s ease;
 }
 
 .input_group input:focus {
-  border-color: #ffcc00;
+  border-color: #2ecc71;
   background: #fff;
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
 }
 
 .btn_main {
   width: 100%; 
   padding: 18px; 
-  background: #000; 
-  color: #ffcc00;
+  background: #1a1a1a; /* Dark contrast */
+  color: #2ecc71; /* Green Text on Black ✅ */
   border: none; 
-  border-radius: 15px; 
+  border-radius: 16px; 
   font-weight: 900; 
   font-size: 16px;
   cursor: pointer; 
   margin-top: 10px;
+  transition: transform 0.2s active;
+}
+
+.btn_main:active {
+  transform: scale(0.98);
 }
 
 .footer { 
-  margin-top: 30px; 
-  font-size: 13px; 
-  color: #888; 
+  margin-top: 35px; 
+  font-size: 14px; 
+  color: #7f8c8d; 
+  font-weight: 600;
 }
 
 .gold_text { 
-  color: #ffcc00; 
+  color: #2ecc71; /* Changed to Green ✅ */
   font-weight: 800; 
   cursor: pointer; 
-  text-decoration: underline; 
+  text-decoration: none; 
   margin-left: 5px; 
+}
+
+.gold_text:hover {
+  text-decoration: underline;
 }

@@ -1,0 +1,206 @@
+/* --- RIDOZO USER BOOKING PANEL (HD GREEN & WHITE) --- */
+
+.main_container {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* --- FULL SCREEN MAP --- */
+.map_view {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; /* सबसे नीचे मैप रहेगा */
+}
+
+/* --- TOP SEARCH BAR (RAPIDO STYLE) --- */
+.top_search {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 1000;
+  border: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.back_btn {
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  color: #1a1a1a;
+  padding-right: 5px;
+}
+
+.location_inputs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.input_box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dot_green { color: #2ecc71; font-size: 12px; }
+.dot_red { color: #e74c3c; font-size: 12px; }
+
+.divider {
+  height: 1px;
+  background: #f1f3f5;
+  margin: 10px 0 10px 24px;
+}
+
+.input_flat {
+  width: 100%;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  outline: none;
+  background: transparent;
+}
+
+.input_flat::placeholder { color: #adb5bd; }
+
+/* --- BOTTOM SLIDING PANEL --- */
+.bottom_card {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 32px 32px 0 0;
+  padding: 20px 24px 30px;
+  box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pull_bar {
+  width: 45px;
+  height: 5px;
+  background: #e9ecef;
+  border-radius: 10px;
+  margin: 0 auto 20px;
+}
+
+.section_title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+/* --- RECENT / SAVED PLACES --- */
+.recent_list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.recent_item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 18px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.recent_item:hover { background: #f8f9fa; }
+
+.icon_bg {
+  width: 48px;
+  height: 48px;
+  background: #f0fff4; /* Light Green */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  margin-right: 15px;
+  font-size: 20px;
+}
+
+.place_name { font-size: 16px; font-weight: 700; color: #1a1a1a; margin: 0; }
+.place_sub { font-size: 13px; color: #95a5a6; margin: 2px 0 0; }
+
+/* --- VEHICLE OPTIONS --- */
+.vehicle_options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.vehicle_card, .vehicle_card_active {
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  border-radius: 20px;
+  border: 2px solid #f1f3f5;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.vehicle_card_active {
+  border-color: #2ecc71;
+  background: #fafffb;
+  box-shadow: 0 8px 20px rgba(46, 204, 113, 0.08);
+}
+
+.v_icon {
+  font-size: 28px;
+  margin-right: 18px;
+}
+
+.v_details { flex: 1; }
+.v_details p { font-size: 16px; font-weight: 800; color: #1a1a1a; margin: 0; }
+.v_details span { font-size: 12px; color: #7f8c8d; font-weight: 600; }
+
+.v_price {
+  font-size: 18px;
+  font-weight: 900;
+  color: #1a1a1a;
+}
+
+/* --- CONFIRM BUTTON --- */
+.confirm_btn {
+  width: 100%;
+  padding: 20px;
+  background: #1a1a1a; /* Dark for Contrast */
+  color: #2ecc71; /* Green Text */
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.confirm_btn:active {
+  transform: scale(0.97);
+}
+
+/* Leaflet Zoom Control Hide */
+:global(.leaflet-control-zoom) {
+  display: none !important;
+}

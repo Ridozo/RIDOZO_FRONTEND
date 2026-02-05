@@ -1,28 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Profile {
-  name: string;
-  vehicle: string;
-  phone: string;
-  rating: number;
+interface WithdrawalRecord {
+  id: string;
+  amount: number;
+  date: string;
 }
 
 interface RiderState {
-  isLoggedIn: boolean;
   isOnline: boolean;
-  walletBalance: string; // Dashboard की मांग के हिसाब से string रखा है
-  profile: Profile;
+  walletBalance: number;
+  withdrawals: WithdrawalRecord[]; 
+  profile: {
+    name: string;
+    vehicle: string;
+    rating: number;
+    phone: string;
+  };
 }
 
 const initialState: RiderState = {
-  isLoggedIn: false,
+  walletBalance: 0,
+  withdrawals: [], 
   isOnline: false,
-  walletBalance: "50000.00",
-  profile: {
-    name: "Uttam Turkar",
-    vehicle: "HR 26 BK 9922",
-    phone: "+91 98765 43210",
-    rating: 4.9
+  profile: {  
+    name: "",
+    vehicle: "",
+    rating: 5.0,
+    phone: ""
   }
 };
 
@@ -30,21 +34,42 @@ const riderSlice = createSlice({
   name: 'rider',
   initialState,
   reducers: {
+    // यही वो फंक्शन है जो गायब था ✅
+    setLogin: (state, action: PayloadAction<{phone: string, name: string, vehicle: string}>) => {
+      state.isOnline = true;
+      state.profile = {
+        ...state.profile,
+        name: action.payload.name,
+        vehicle: action.payload.vehicle,
+        phone: action.payload.phone,
+      };
+    },
+
     toggleStatus: (state) => {
       state.isOnline = !state.isOnline;
     },
-    updateProfile: (state, action: PayloadAction<Partial<Profile>>) => {
-      state.profile = { ...state.profile, ...action.payload };
+
+    addMoney: (state, action: PayloadAction<number>) => {
+      state.walletBalance += action.payload;
     },
-    updateBalance: (state, action: PayloadAction<string>) => {
-      state.walletBalance = action.payload;
+
+    withdrawBalance: (state) => {
+      if (state.walletBalance > 0) {
+        state.withdrawals.unshift({
+          id: `WTH_${Date.now()}`,
+          amount: state.walletBalance,
+          date: new Date().toLocaleString('en-GB')
+        });
+        state.walletBalance = 0;
+      }
     },
+
     logout: (state) => {
-      state.isLoggedIn = false;
-      state.isOnline = false;
+      return initialState; // सब कुछ रिसेट कर देगा
     }
-  },
+  }
 });
 
-export const { toggleStatus, updateProfile, updateBalance, logout } = riderSlice.actions;
+// यहाँ चेक करें: setLogin एक्सपोर्ट होना ज़रूरी है ✅
+export const { setLogin, toggleStatus, addMoney, withdrawBalance, logout } = riderSlice.actions;
 export default riderSlice.reducer;

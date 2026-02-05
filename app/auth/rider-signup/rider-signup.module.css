@@ -7,13 +7,13 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  -webkit-font-smoothing: antialiased; /* Snappy Text Rendering */
+  -webkit-font-smoothing: antialiased;
 }
 
 .signup_card {
   width: 100%;
   max-width: 400px;
-  will-change: transform; /* Prepares GPU for smooth transitions */
+  will-change: transform;
 }
 
 /* --- LOGO SECTION --- */
@@ -25,8 +25,8 @@
 .logo_icon {
   width: 64px;
   height: 64px;
-  background: #ffcc00;
-  color: #000;
+  background: #2ecc71; /* Premium Green */
+  color: #fff;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -34,65 +34,150 @@
   font-size: 32px;
   font-weight: 900;
   margin: 0 auto 12px;
-  box-shadow: 0 12px 24px rgba(255, 204, 0, 0.25);
+  box-shadow: 0 12px 24px rgba(46, 204, 113, 0.25);
 }
 
 .brand_name {
   font-size: 24px;
   font-weight: 900;
   letter-spacing: -0.5px;
+  color: #1a1a1a;
 }
 
-.brand_name span { color: #ffcc00; }
+.brand_name span { color: #2ecc71; }
+
 .title { 
   font-size: 15px; 
   font-weight: 800; 
-  letter-spacing: -0.5px; 
-  color: #000;
+  letter-spacing: 0.5px; 
+  color: #fff;
   padding: 10px 0;
   margin-top: 10px;
-  border: 1 solid #000;
-  background-color: #ffcc00;
+  text-transform: uppercase;
+  background-color: #2ecc71; /* Green Background */
   border-radius: 12px;
+  text-align: center;
 }
 
 .subtitle { 
-  color: #adb5bd; 
+  color: #95a5a6; 
   font-size: 14px; 
   margin-top: 5px; 
 }
 
-/* --- FAST PROGRESS BAR --- */
+/* --- DUAL OTP MODAL (FIXED & CRISP) --- */
+.otp_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px); /* प्रीमियम धुंधला इफेक्ट */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* सबसे ऊपर रहेगा */
+  padding: 20px;
+}
+
+.otp_box {
+  background: #ffffff;
+  padding: 35px 25px;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.otp_box h2 {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.otp_box p {
+  font-size: 13px;
+  color: #7f8c8d;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+.otp_inputs {
+  display: flex;
+  flex-direction: column; /* इनपुट एक के नीचे एक आएंगे ताकि साफ दिखें */
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.otp_inputs input {
+  width: 100%;
+  padding: 18px;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 4px; /* OTP के बीच गैप */
+  border: 2px solid #f1f3f5;
+  border-radius: 16px;
+  background: #f8f9fa;
+  color: #2ecc71; /* टाइप करने पर हरा दिखेगा */
+  transition: all 0.3s;
+}
+
+.otp_inputs input:focus {
+  outline: none;
+  border-color: #2ecc71;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+}
+
+/* बटन को ओटीपी बॉक्स के हिसाब से सेट किया */
+.otp_box .btn_primary {
+  margin-top: 5px;
+  background: #2ecc71;
+  color: #fff;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+/* --- PROGRESS BAR --- */
 .progress_container {
   margin-bottom: 35px;
-  background: #f1f3f5;
-  height: 4px;
+  background: #e8f5e9;
+  height: 6px;
   border-radius: 10px;
   position: relative;
 }
 
 .progress_bar {
-  background: #ffcc00;
+  background: #2ecc71;
   height: 100%;
   border-radius: 10px;
-  transition: width 0.3s ease-out; /* Snappy feedback */
+  transition: width 0.3s ease-out;
 }
 
 .step_indicator {
   position: absolute;
-  top: 10px;
+  top: 12px;
   right: 0;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
-  color: #adb5bd;
+  color: #2ecc71;
 }
 
-/* --- INPUTS: BOLD & CRISP --- */
+/* --- INPUTS --- */
 .step_view h2 {
   font-size: 20px;
   font-weight: 900;
   margin-bottom: 25px;
-  color: #000;
+  color: #1a1a1a;
 }
 
 .input_group {
@@ -112,48 +197,61 @@
   font-weight: 700;
   color: #000;
   outline: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition: all 0.2s;
 }
 
 .input_group input:focus {
-  border-color: #ffcc00;
+  border-color: #2ecc71;
   background: #fff;
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
 }
 
-/* --- DOCUMENT UPLOADS --- */
+/* --- DOCUMENT UPLOADS (RESIZED) --- */
 .doc_list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
 .doc_item {
-  background: #fdfdfd;
-  padding: 16px;
-  border-radius: 18px;
+  background: #fff;
+  padding: 12px; /* Reduced padding */
+  border-radius: 16px;
   border: 1.5px solid #f1f3f5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .doc_item input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
+  padding: 12px;
+  margin-bottom: 0;
   border: 1px solid #eee;
   border-radius: 10px;
+  font-size: 14px;
 }
 
+/* छोटा और स्लीक अपलोड बटन ✅ */
 .upload_label {
-  display: block;
-  padding: 12px;
-  border: 2px dashed #ffcc00;
-  border-radius: 12px;
+  display: inline-block;
+  align-self: flex-start; /* Left aligned */
+  padding: 8px 16px; /* Smaller padding */
+  border: 1.5px solid #2ecc71;
+  border-radius: 8px;
   text-align: center;
-  font-size: 11px;
-  font-weight: 900;
-  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  color: #2ecc71;
   cursor: pointer;
   background: #fff;
+  transition: 0.2s;
+}
+
+.upload_label:hover {
+  background: #2ecc71;
+  color: #fff;
 }
 
 /* --- PREMIUM BUTTONS --- */
@@ -162,23 +260,28 @@
   gap: 12px;
 }
 
-.btn_primary, .btn_finish {
+.btn_primary {
   width: 100%;
   padding: 18px;
-  background: #000;
-  color: #ffcc00;
+  background: #1a1a1a; /* Dark for Contrast */
+  color: #fff;
   border: none;
   border-radius: 16px;
   font-weight: 900;
   font-size: 15px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.btn_finish { background: #2ecc71; color: #fff; }
-
-.btn_primary:active, .btn_secondary:active {
-  transform: scale(0.97); /* Haptic-like feedback */
+.btn_finish { 
+  width: 100%;
+  padding: 18px;
+  background: #2ecc71; 
+  color: #fff; 
+  border: none;
+  border-radius: 16px;
+  font-weight: 900;
+  font-size: 16px;
+  box-shadow: 0 10px 20px rgba(46, 204, 113, 0.2);
 }
 
 .btn_secondary {
@@ -189,55 +292,18 @@
   border: none;
   border-radius: 16px;
   font-weight: 800;
-  cursor: pointer;
 }
 
 /* --- DUAL OTP MODAL --- */
-.otp_overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-
 .otp_box {
   background: #fff;
   padding: 40px 30px;
   border-radius: 32px;
-  width: 90%;
-  max-width: 380px;
-  text-align: center;
-}
-
-.otp_inputs input {
-  width: 100%;
-  padding: 16px;
-  margin-bottom: 12px;
-  font-size: 20px;
-  font-weight: 900;
-  text-align: center;
-  border: 2px solid #f1f3f5;
-  border-radius: 14px;
+  border-top: 8px solid #2ecc71;
 }
 
 /* --- FOOTER LOGIN LINK --- */
-.footer_link {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #f1f3f5;
-  font-size: 14px;
-  color: #adb5bd;
-  text-align: center;
-}
-
 .footer_link span {
-  color: #ffcc00;
+  color: #2ecc71;
   font-weight: 900;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-left: 6px;
 }

@@ -1,64 +1,66 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Ride {
+interface RideRecord {
   id: string;
-  date: string; // Format: YYYY-MM-DD
-  time: string;
+  date: string;
+  timestamp: number; 
   pickup: string;
   drop: string;
   amount: number;
-  status: 'COMPLETED' | 'CANCELLED';
+  status: 'COMPLETED';
 }
 
 interface HistoryState {
-  rides: Ride[];
+  rides: RideRecord[];
   weeklyTotal: number;
   monthlyTotal: number;
-  searchTerm: string; // <-- यह मिसिंग था, अब ऐड कर दिया है
 }
 
 const initialState: HistoryState = {
   rides: [],
   weeklyTotal: 0,
   monthlyTotal: 0,
-  searchTerm: "", // <-- इनिशियली खाली रहेगा
+};
+
+// हेल्पर फंक्शन: 7 और 30 दिन का हिसाब लगाने के लिए
+const calculateTotals = (rides: RideRecord[]) => {
+  const now = Date.now();
+  const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+  const oneMonthInMs = 30 * 24 * 60 * 60 * 1000;
+
+  let weekly = 0;
+  let monthly = 0;
+
+  rides.forEach(ride => {
+    const age = now - ride.timestamp;
+    if (age <= oneWeekInMs) weekly += ride.amount;
+    if (age <= oneMonthInMs) monthly += ride.amount;
+  });
+
+  return { weekly, monthly };
 };
 
 const rideHistorySlice = createSlice({
   name: 'rideHistory',
   initialState,
   reducers: {
-    addRideToHistory: (state, action: PayloadAction<Ride>) => {
+    // 1. नई राइड जोड़ते वक्त स्टैट्स अपडेट
+    addRideToHistory: (state, action: PayloadAction<RideRecord>) => {
       state.rides.unshift(action.payload);
-
-      const rideDate = new Date(action.payload.date);
-      const now = new Date();
-
-      // हफ्ते की कैलकुलेशन (Last 7 Days)
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(now.getDate() - 7);
-      
-      // महीने की कैलकुलेशन (Current Month)
-      const isThisMonth = rideDate.getMonth() === now.getMonth() && 
-                          rideDate.getFullYear() === now.getFullYear();
-
-      if (rideDate >= oneWeekAgo) {
-        state.weeklyTotal += action.payload.amount;
-      }
-      if (isThisMonth) {
-        state.monthlyTotal += action.payload.amount;
-      }
+      const totals = calculateTotals(state.rides);
+      state.weeklyTotal = totals.weekly;
+      state.monthlyTotal = totals.monthly;
     },
 
-    // --- यह नया रिड्यूसर ऐड किया है (Search Error Solve करने के लिए) ---
-    setSearchTerm: (state, action: PayloadAction<string>) => {
-      state.searchTerm = action.payload;
-    },
-
-    resetHistory: () => initialState,
-  },
+    // 2. नाम यहाँ 'refreshHistoryStats' फिक्स कर दिया है ✅
+    refreshHistoryStats: (state) => {
+      const totals = calculateTotals(state.rides);
+      state.weeklyTotal = totals.weekly;
+      state.monthlyTotal = totals.monthly;
+    }
+  }
 });
 
-// अब यहाँ से setSearchTerm एक्सपोर्ट होगा, तो एरर नहीं आएगी
-export const { addRideToHistory, resetHistory, setSearchTerm } = rideHistorySlice.actions;
+// एक्सपोर्ट्स में नाम एकदम सही है ✅
+export const { addRideToHistory, refreshHistoryStats } = rideHistorySlice.actions;
 export default rideHistorySlice.reducer;
