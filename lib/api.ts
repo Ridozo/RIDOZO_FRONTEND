@@ -1,6 +1,6 @@
 import axios from "axios";
-import { store } from "@/redux/store";
-import { setTokens, logout } from "@/redux/globalSlice";
+import { store } from "../redux/store";
+import { setTokens, logout } from "../redux/globalSlice";
 
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
