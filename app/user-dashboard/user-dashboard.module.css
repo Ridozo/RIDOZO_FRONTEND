@@ -204,3 +204,41 @@
 :global(.leaflet-control-zoom) {
   display: none !important;
 }
+
+.search_results_list {
+  background: white;
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.result_item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.result_item:hover {
+  background: #f9f9f9;
+}
+
+.res_icon {
+  margin-right: 15px;
+  font-size: 18px;
+}
+
+.res_info p {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.res_info small {
+  color: #888;
+  font-size: 11px;
+}
