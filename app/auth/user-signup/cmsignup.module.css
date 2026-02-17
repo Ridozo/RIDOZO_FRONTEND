@@ -1,0 +1,146 @@
+.signup_full_page {
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.signup_form_card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(46, 204, 113, 0.1);
+  text-align: center;
+  border: 1px solid #f0f0f0;
+}
+
+.brand_logo_center {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+}
+
+.brand_logo_center span {
+  color: #2ecc71; /* Ridozo Green */
+}
+
+.point_container {
+  margin-bottom: 10px;
+}
+
+.welcome_point_text {
+  background: #e8faf0;
+  color: #2ecc71;
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.input_group_block {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.label_text {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+  margin-left: 5px;
+}
+
+.standard_input {
+  width: 100%;
+  padding: 16px 20px;
+  background: #f9fbf9;
+  border: 2px solid #f0f2f0;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.standard_input:focus {
+  border-color: #2ecc71;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+}
+
+.btn_finish_reg {
+  width: 100%;
+  padding: 18px;
+  background: #2ecc71;
+  color: #ffffff;
+  border: none;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 10px 25px rgba(46, 204, 113, 0.2);
+}
+
+.btn_finish_reg:hover {
+  background: #27ae60;
+  transform: translateY(-2px);
+}
+
+.btn_finish_reg:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.welcome_user_msg {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.sub_text {
+  color: #95a5a6;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.footer_link_text {
+  margin-top: 25px;
+  font-size: 14px;
+  color: #95a5a6;
+}
+
+.footer_link_text a {
+  color: #2ecc71;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.error_msg {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.fade_in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

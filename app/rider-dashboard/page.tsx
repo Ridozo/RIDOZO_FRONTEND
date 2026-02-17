@@ -11,6 +11,7 @@ import { addRideToHistory, refreshHistoryStats } from '../../redux/rideHistorySl
 import { clearRequest, receiveRideRequest } from '../../redux/rideRequestSlice';
 
 import styles from './RiderDashboard.module.css';
+import { Users } from 'lucide-react';
 
 // Dynamic Map Import ✅
 const RiderMap = dynamic(() => import('../../component/Rider/RiderMap'), { 
@@ -34,15 +35,75 @@ const RiderDashboard = () => {
     dispatch(refreshHistoryStats());
   }, [activeTab, dispatch]);
 
-  // Real-time Ride Request Listener
+  // Real-time Ride Request Listener (Integrated with Sound)
   useEffect(() => {
     const rideChannel = new BroadcastChannel('ride_requests');
+    
     rideChannel.onmessage = (event) => {
-      if (event.data) dispatch(receiveRideRequest(event.data));
-      else dispatch(clearRequest());
+      console.log("New Request Received:", event.data);
+      
+      if (event.data) {
+        // 1. Redux में रिक्वेस्ट सेव करें
+        dispatch(receiveRideRequest(event.data));
+        
+        // 2. नोटिफिकेशन साउंड प्ले करें (अगर ऑनलाइन है)
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2506/2506-preview.mp3'); 
+        audio.play().catch(e => console.log("Audio play failed, waiting for user interaction"));
+      } else {
+        dispatch(clearRequest());
+      }
     };
+
     return () => rideChannel.close();
   }, [dispatch]);
+
+  // --- LIVE LOCATION TRACKING MAGIC ✨ ---
+  useEffect(() => {
+    if (isActive && tripStatus === 'PICKUP') {
+      const userChannel = new BroadcastChannel('ridozo_user_stream');
+      
+      // मान लेते हैं कि राइडर भोपाल में मूव कर रहा है
+      let lat = 23.2599; 
+      let lng = 77.4126;
+
+      const moveRider = setInterval(() => {
+        lat += 0.0002; // धीरे-धीरे लोकेशन बदलना (थोड़ा कम किया ताकि रियलिस्टिक लगे)
+        lng += 0.0002;
+
+        userChannel.postMessage({
+          type: 'LIVE_LOCATION_UPDATE',
+          coords: [lat, lng]
+        });
+      }, 2000); // हर 2 सेकंड में अपडेट
+
+      return () => {
+        clearInterval(moveRider);
+        userChannel.close();
+      };
+    }
+  }, [isActive, tripStatus]);
+
+  const hendleAccept = () => {
+    if (incomingRequest) {
+      // 1. Redux में रिक्वेस्ट एक्सेप्ट करें
+      dispatch(acceptRide(incomingRequest));
+      dispatch(clearRequest());
+      setActiveTab('home');
+
+      // 2. User को सिग्नल भेजें (📡)
+      const userChannel = new BroadcastChannel('ridozo_user_stream');
+      userChannel.postMessage({
+        type: 'RIDE_ACCEPTED',
+        riderData: {
+          name: profile?.name,  
+          vehicle: profile?.vehicle,
+          rating: profile?.rating,
+          coords: [23.2599, 77.4126]
+        }
+      });
+      userChannel.close();
+    }
+  };
 
   const handleFinishRide = () => {
     const fare = rideData?.fare || 0;
@@ -57,6 +118,12 @@ const RiderDashboard = () => {
       status: 'COMPLETED'
     }));
     dispatch(addMoney(fare));
+
+    // यूजर को राइड खत्म होने का सिग्नल भेजें
+    const userChannel = new BroadcastChannel('ridozo_user_stream');
+    userChannel.postMessage({ type: 'RIDE_FINISHED' });
+    userChannel.close();
+
     dispatch(finishRide());
   };
 
@@ -84,7 +151,7 @@ const RiderDashboard = () => {
 
       <main className={styles.main_content}>
         
-        {/* --- 1. HOME TAB (MAP + TRIP LOGIC) --- */}
+        {/* --- 1. HOME TAB --- */}
         {activeTab === 'home' && (
           <div className={styles.tab_view}>
             <div className={styles.map_container} style={{height: '320px', borderRadius: '20px', overflow: 'hidden', margin: '10px', border: '2px solid #eee'}}>
@@ -111,7 +178,7 @@ const RiderDashboard = () => {
           </div>
         )}
 
-        {/* --- 2. WALLET TAB (FULL WITHDRAWAL LOGIC ✅) --- */}
+        {/* --- 2. WALLET TAB --- */}
         {activeTab === 'wallet' && (
           <div className={styles.tab_padding}>
             <h1 className={styles.page_title}>MY WALLET</h1>
@@ -151,7 +218,7 @@ const RiderDashboard = () => {
           </div>
         )}
 
-        {/* --- 3. HISTORY TAB (WEEKLY/MONTHLY STATS ✅) --- */}
+        {/* --- 3. HISTORY TAB --- */}
         {activeTab === 'history' && (
           <div className={styles.tab_padding}>
             <h1 className={styles.page_title}>HISTORY</h1>
@@ -171,7 +238,7 @@ const RiderDashboard = () => {
           </div>
         )}
 
-        {/* --- 4. ACCOUNT TAB (FULL PROFILE ✅) --- */}
+        {/* --- 4. ACCOUNT TAB --- */}
         {activeTab === 'account' && (
           <div className={styles.tab_padding}>
             <h1 className={styles.page_title}>MY PROFILE</h1>
@@ -209,10 +276,11 @@ const RiderDashboard = () => {
             </div>
             <div className={styles.modal_actions}>
               <button className={styles.btn_grey} onClick={() => dispatch(clearRequest())}>IGNORE</button>
-              <button className={styles.btn_gold} onClick={() => { dispatch(acceptRide(incomingRequest)); dispatch(clearRequest()); setActiveTab('home'); }}>ACCEPT</button>
+              <button className={styles.btn_gold} onClick={hendleAccept}>ACCEPT</button>
             </div>
           </div>
         </div>
+
       )}
 
       {/* --- FOOTER NAVBAR --- */}

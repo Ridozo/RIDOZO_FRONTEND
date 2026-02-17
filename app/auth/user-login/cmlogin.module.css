@@ -1,0 +1,123 @@
+.signup_full_page {
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.signup_form_card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(46, 204, 113, 0.1);
+  text-align: center;
+  border: 1px solid #f0f0f0;
+}
+
+.brand_logo_center {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+}
+
+.brand_logo_center span {
+  color: #2ecc71; /* Ridozo Green */
+}
+
+.welcome_point_text {
+  background: #e8faf0;
+  color: #2ecc71;
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.method_toggle_container {
+  display: flex;
+  background: #f5f5f5;
+  padding: 5px;
+  border-radius: 14px;
+  margin-bottom: 30px;
+}
+
+.tab_btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #888;
+  background: transparent;
+}
+
+.tab_active {
+  background: #2ecc71 !important;
+  color: #ffffff !important;
+}
+
+.input_group_block {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.label_text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #7f8c8d;
+  margin-left: 5px;
+}
+
+.standard_input {
+  width: 100%;
+  padding: 16px 20px;
+  background: #f9fbf9;
+  border: 2px solid #f0f2f0;
+  border-radius: 16px;
+  font-weight: 600;
+  outline: none;
+}
+
+.standard_input:focus {
+  border-color: #2ecc71;
+}
+
+.btn_finish_reg {
+  width: 100%;
+  padding: 18px;
+  background: #2ecc71;
+  color: #ffffff;
+  border: none;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.footer_text {
+  margin-top: 30px;
+  font-size: 14px;
+  color: #666;
+}
+
+.footer_text a {
+  color: #2ecc71;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.fade_in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
