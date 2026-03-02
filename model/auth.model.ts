@@ -6,7 +6,7 @@ export interface UserSignupRequest {
   mobileNo: string;
   email: string;
   city: string;
-  password: string;
+  // password: string;
   isActive: boolean;
 }
 
